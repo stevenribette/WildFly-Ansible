@@ -1,0 +1,42 @@
+- hosts: WILDFLY_GROUPE
+  tasks:
+  - name: Installer le jdk
+    package: name=openjdk-8-jdk-headless state=present
+  
+  - name: Créer user wildfly
+    user: 
+	name: wildfly
+	system: yes
+	createhome: no
+	shell: /bin/false
+
+  - name: Télécharger l'archive
+    unarchive:
+	src: http://download.jboss.org/wildfly/11.0.0.Final/wildfly-11.0.0.Final.tar.gz
+	dest: /opt
+	owner: wildfly
+  - name: créer dossier wildfly
+    copy: 
+	dest: /etc/wildfly/
+  - name: copier fichier conf
+    copy:
+	src: /opt/wildfly/docs/contrib/scripts/systemd/wildfly.conf
+	dest: /etc/wildfly
+  - name: copier fichier service
+    copy:
+	src: /opt/wildlfy/docs/contrib/scripts/systemd/wildfly.service
+	dest: /etc/systemd/system
+  - name: copier fichier launch
+    copy:
+	src: /opt/wildfly/docs/contrib/scripts/systemd/laucnh.sh
+	dest: /opt/wildfly/bin
+	mode: u=x
+
+  - name: service dans systemd
+    systemd:
+	name=
+
+  - name: service lancé
+    service:
+	name: wildfly
+	state: started

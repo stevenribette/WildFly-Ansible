@@ -1,57 +1,46 @@
 - hosts: WILDFLY_GROUPE
   tasks:
   - name: installer le jdk 
-  	package: name=openjdk-8-jdk-headless state=present
-
+      package:
+        name: openjdk-8-jdk-headless 
+        state: present
   - name: Créer user
-    user:
-			name: wildfly
-			system: yes
-			createhome: no
-			shell: /bin/false
-
+      user:
+        name: wildfly
+        system: yes
+        createhome: no
+        shell: /bin/false
   - name: Télécharger l'archive
-    unarchive:
-			src: http://download.jboss.org/wildfly/11.0.0.Final/wildfly-11.0.0.Final.tar.gz
-			dest: /opt
-			owner: wildfly
-
+      unarchive:
+        src: http://download.jboss.org/wildfly/11.0.0.Final/wildfly-11.0.0.Final.tar.gz
+        dest: /opt
+        owner: wildfly
   - name: Renommer fichier
-    command:
-			mv /opt/wildfly-11.0.0.Final.tar.gz /opt/wildfly
-
+      command: mv /opt/wildfly-11.0.0.Final.tar.gz /opt/wildfly
   - name: Créer dossier wildfly
-    copy:
-			dest: /etc/wildfly/
-
+      copy:
+        dest: /etc/wildfly/
   - name: Copier les fichiers
-    copy:
-			src: /opt/wildfly/docs/contrib/scripts/systemd/
-			dest: /etc/wildfly
-
+      copy:
+        src: /opt/wildfly/docs/contrib/scripts/systemd/
+        dest: /etc/wildfly
   - name: Supprimer readme
-    command:
-			rm /etc/wildfly/readme.md
-
+      command: rm /etc/wildfly/readme.md
   - name: Droit fichier
-    file:
-			path: /etc/wildfly/launch.sh
-			mode: "u=x"
-
+      file:
+        path: /etc/wildfly/launch.sh
+        mode: "u=x"
   - name: Installer service
-    template:
-			src: wildfly.service.j2
-			dest: /etc/systemd/system/wildfly.service
-
+      template:
+      src: wildfly.service.j2
+      dest: /etc/systemd/system/wildfly.service
   - name: Enregister service
-    systemd:
-			name: wildfly
-			enabled: yes
-			state: started
-			daemon_reload: yes
-
+      systemd:
+        name: wildfly
+        enabled: yes
+        state: started
+        daemon_reload: yes
   - name: Service lancé
-    service:
-			name: wildfly
-			state: started
-
+      service:
+        name: wildfly
+        state: started

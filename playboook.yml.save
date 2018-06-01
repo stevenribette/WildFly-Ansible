@@ -1,0 +1,7 @@
+- hosts: UBUNTU_GROUPE
+  tasks:
+  - name: Installer le jdk
+    package: 
+	name=openjdk-8-jdk-headless
+
+  - name
